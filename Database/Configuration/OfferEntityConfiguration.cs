@@ -18,7 +18,7 @@ public class OfferEntityConfiguration : IEntityTypeConfiguration<OfferEntity>
             .IsRequired()
             .HasMaxLength(255);
         
-        builder.Property(x => x.CategoryId)
+        builder.Property(x => x.Category)
             .HasColumnName("category")
             .IsRequired();
         
@@ -45,5 +45,10 @@ public class OfferEntityConfiguration : IEntityTypeConfiguration<OfferEntity>
         builder.Property(x => x.ModifiedAt)
             .HasColumnName("modified_at")
             .HasDefaultValue(null);
+
+        builder.Property(x => x.IsDeleted)
+            .HasColumnName("deleted")
+            .IsRequired()
+            .HasDefaultValue(false);
     }
 }

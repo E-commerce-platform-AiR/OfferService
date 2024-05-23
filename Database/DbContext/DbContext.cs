@@ -8,11 +8,13 @@ public class OfferDbContext : Microsoft.EntityFrameworkCore.DbContext
     public OfferDbContext(DbContextOptions<OfferDbContext> options) : base(options) { }
     
     public DbSet<OfferEntity> Offers { get; set; } = null!;
+    public DbSet<CategoryEntity> Category { get; set; } = null!;
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfiguration(new OfferEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new CategoryEntityConfiguration());
     }
 }

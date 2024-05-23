@@ -48,8 +48,8 @@ public class Startup
     private static void ConfigureScopedServices(IServiceCollection services)
     {
         services.AddRazorPages();
-        // services.AddScoped<IOfferRepository, OfferRepository>();
-        // services.AddScoped<IUserService, Services.UserService>();
+        services.AddScoped<IOfferRepository, OfferRepository>();
+        services.AddScoped<IOfferService, Services.OfferService>();
     }
     
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
