@@ -3,6 +3,7 @@ using OfferService.Database.DbContext;
 using OfferService.Database.DbContext;
 using OfferService.Database.Repositories;
 using OfferService.Database.Repositories.Interfaces;
+using OfferService.Services;
 using OfferService.Services.Interfaces;
 
 namespace OfferService;
@@ -48,8 +49,10 @@ public class Startup
     private static void ConfigureScopedServices(IServiceCollection services)
     {
         services.AddRazorPages();
-        services.AddScoped<IOfferRepository, OfferRepository>();
         services.AddScoped<IOfferService, Services.OfferService>();
+        services.AddScoped<IOfferRepository, OfferRepository>();
+        services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
     }
     
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

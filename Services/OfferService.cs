@@ -8,10 +8,12 @@ namespace OfferService.Services;
 public class OfferService : IOfferService
 {
     private readonly IOfferRepository _offerRepository;
+    private readonly ICategoryRepository _categoryRepository;
     
-    public OfferService(IOfferRepository offerRepository)
+    public OfferService(IOfferRepository offerRepository, ICategoryRepository categoryRepository)
     {
         _offerRepository = offerRepository;
+        _categoryRepository = categoryRepository;
     }
     
     public async Task<OfferEntity> PostOffer(Guid userId, Offer offer)
@@ -31,9 +33,12 @@ public class OfferService : IOfferService
     
     public async Task<OfferEntity> PatchOffer(Guid userId, long offerId, Offer offer)
     {
+
+        CategoryEntity categoryEntity = await _categoryRepository.GetCategoryByName(offer.Category);
+        
         OfferEntity offerEntity = await _offerRepository.GetOffer(userId, offerId);
         offerEntity.Title = offer.Title;
-        offerEntity.Category = offer.Category;
+        offerEntity.Category = categoryEntity.Id;
         offerEntity.Description = offer.Description;
         offerEntity.Price = offer.Price;
         offerEntity.ModifiedAt = DateTimeOffset.UtcNow;

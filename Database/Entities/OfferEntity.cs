@@ -18,7 +18,6 @@ public class OfferEntity
     public OfferEntity(Offer offer)
     {
         Title = offer.Title;
-        Category = offer.Category;
         Description = offer.Description;
         Logo = offer.Logo;
         Price = offer.Price;
