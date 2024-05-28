@@ -1,10 +1,10 @@
 ﻿namespace OfferService.Models;
 
-public class Offer
+public sealed class Offer
 {
     public string Title { get; set; }
-    public string Category { get; set; }
+    public int Category { get; set; }
     public string? Description { get; set; }
-    public Uri? Logo;
+    public Uri? Logo { get; set; }
     public double Price { get; set; }
 }

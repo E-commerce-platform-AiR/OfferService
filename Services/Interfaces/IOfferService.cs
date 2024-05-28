@@ -5,7 +5,9 @@ namespace OfferService.Services.Interfaces;
 public interface IOfferService
 {
     Task<OfferEntity> PostOffer(Guid userId, Offer offer);
-    Task<IEnumerable<OfferEntity>> GetUsersOffers(Guid userId);
+    Task<IEnumerable<OfferResponse>> GetOffers();
+    Task<IEnumerable<OfferResponse>> GetUsersOffers(Guid userId);
     Task<bool> DeleteOffer(Guid userId, long offerId);
     Task<OfferEntity> PatchOffer(Guid userId, long offerId, Offer offer);
+    Task<IEnumerable<OfferResponse>> GetOfferByCategory(int categoryId);
 }

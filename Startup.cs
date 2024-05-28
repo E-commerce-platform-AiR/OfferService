@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OfferService.Database.DbContext;
-using OfferService.Database.DbContext;
 using OfferService.Database.Repositories;
 using OfferService.Database.Repositories.Interfaces;
 using OfferService.Services;

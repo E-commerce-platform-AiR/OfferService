@@ -5,7 +5,7 @@ using OfferService.Services.Interfaces;
 
 namespace OfferService.Services;
 
-public class OfferService : IOfferService
+public sealed class OfferService : IOfferService
 {
     private readonly IOfferRepository _offerRepository;
     private readonly ICategoryRepository _categoryRepository;
@@ -22,7 +22,8 @@ public class OfferService : IOfferService
         {
             Id = new long(),
             CreatedAt = DateTimeOffset.UtcNow,
-            CreatedBy = userId
+            CreatedBy = userId,
+            Logo = offer.Logo
         };
 
         await _offerRepository.InsertOfferAsync(offerEntity);
@@ -34,11 +35,11 @@ public class OfferService : IOfferService
     public async Task<OfferEntity> PatchOffer(Guid userId, long offerId, Offer offer)
     {
 
-        CategoryEntity categoryEntity = await _categoryRepository.GetCategoryByName(offer.Category);
+        CategoryEntity categoryEntity = await _categoryRepository.GetCategoryById(offer.Category);
         
         OfferEntity offerEntity = await _offerRepository.GetOffer(userId, offerId);
         offerEntity.Title = offer.Title;
-        offerEntity.Category = categoryEntity.Id;
+        offerEntity.CategoryId = categoryEntity.Id;
         offerEntity.Description = offer.Description;
         offerEntity.Price = offer.Price;
         offerEntity.ModifiedAt = DateTimeOffset.UtcNow;
@@ -47,9 +48,37 @@ public class OfferService : IOfferService
         return offerEntity;
     }
 
-    public async Task<IEnumerable<OfferEntity>> GetUsersOffers(Guid userId)
+    public async Task<IEnumerable<OfferResponse>> GetUsersOffers(Guid userId)
     {
-        return await _offerRepository.GetUsersOffers(userId);
+        IEnumerable<OfferEntity> offers = await _offerRepository.GetUsersOffers(userId);
+        return await ConvertObjects(offers);
+    }
+
+    public async Task<IEnumerable<OfferResponse>> GetOffers()
+    {
+        IEnumerable<OfferEntity> offers = await _offerRepository.GetOffers();
+        return await ConvertObjects(offers);
+    }
+
+    private async Task<IEnumerable<OfferResponse>> ConvertObjects(IEnumerable<OfferEntity> offerEntities) //no ta metoda mi sie nie podoba w wolnym czasie refactor
+    {
+        var offerResponses = new List<OfferResponse>();
+        foreach (var offer in offerEntities)
+        {
+            var categoryEntity = await _categoryRepository.GetCategoryById(offer.CategoryId);
+            var offerResponse = new OfferResponse(offer)
+            {
+                Category = categoryEntity.Name
+            };
+            offerResponses.Add(offerResponse);
+        }
+
+        return offerResponses;
+    }
+
+    public async Task<IEnumerable<OfferResponse>> GetOfferByCategory(int categoryId)
+    {
+        return await _offerRepository.GetOfferByCategory(categoryId);
     }
     
     public async Task<bool> DeleteOffer(Guid userId, long offerId)

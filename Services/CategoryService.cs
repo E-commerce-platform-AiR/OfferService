@@ -5,7 +5,7 @@ using OfferService.Services.Interfaces;
 
 namespace OfferService.Services;
 
-public class CategoryService : ICategoryService
+public sealed class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _categoryRepository;
 

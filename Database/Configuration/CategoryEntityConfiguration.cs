@@ -4,7 +4,7 @@ using OfferService.Database.Entities;
 
 namespace OfferService.Database.Configuration;
 
-public class CategoryEntityConfiguration : IEntityTypeConfiguration<CategoryEntity>
+public sealed class CategoryEntityConfiguration : IEntityTypeConfiguration<CategoryEntity>
 {
     public void Configure(EntityTypeBuilder<CategoryEntity> builder)
     {

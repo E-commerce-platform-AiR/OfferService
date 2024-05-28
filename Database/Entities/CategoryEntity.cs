@@ -2,7 +2,7 @@
 
 namespace OfferService.Database.Entities;
 
-public class CategoryEntity
+public sealed class CategoryEntity
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -11,5 +11,9 @@ public class CategoryEntity
     {
         Id = new int();
         Name = category.Name;
+    }
+
+    public CategoryEntity()
+    {
     }
 }

@@ -2,12 +2,11 @@
 using OfferService.Database.DbContext;
 using OfferService.Database.Entities;
 using OfferService.Database.Repositories.Interfaces;
-using OfferService.Models;
 using OfferService.Models.Exceptions;
 
 namespace OfferService.Database.Repositories;
 
-public class CategoryRepository : ICategoryRepository
+public sealed class CategoryRepository : ICategoryRepository
 {
     private readonly OfferDbContext _dbContext;
 
@@ -18,7 +17,18 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<CategoryEntity> GetCategoryByName(string categoryName)
     {
-        CategoryEntity categoryEntity = await _dbContext.Category.Where(x => x.Name == categoryName).SingleOrDefaultAsync();
+        CategoryEntity? categoryEntity = await _dbContext.Category.Where(x => x.Name == categoryName).SingleOrDefaultAsync();
+        if (categoryEntity == null)
+        {
+            throw new CategoryDoesNotExistException();
+        }
+
+        return categoryEntity;
+    }
+    
+    public async Task<CategoryEntity> GetCategoryById(int categoryId)
+    {
+        CategoryEntity? categoryEntity = await _dbContext.Category.Where(x => x.Id == categoryId).SingleOrDefaultAsync();
         if (categoryEntity == null)
         {
             throw new CategoryDoesNotExistException();
@@ -34,6 +44,10 @@ public class CategoryRepository : ICategoryRepository
     
     public async Task InsertCategoryAsync(CategoryEntity categoryEntity)
     {
+        if (_dbContext.Category.Any(x => x.Name == categoryEntity.Name))
+        {
+            throw new CategoryAlreadyExist();
+        }
         await _dbContext.Category.AddAsync(categoryEntity); 
     }
     

@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OfferService.Database.Entities;
 using OfferService.Models;
+using OfferService.Models.Exceptions;
 using OfferService.Services.Interfaces;
 
 namespace OfferService.Controllers;
 
 [ApiController]
 //[Route("category")]
-public class CategoryController : ControllerBase
+public sealed class CategoryController : ControllerBase
 {
-    private readonly ICategoryService _categoryService; // poprawic dodac category service
+    private readonly ICategoryService _categoryService;
     
     public CategoryController(ICategoryService categoryService)
     {
@@ -17,20 +18,20 @@ public class CategoryController : ControllerBase
     }
     
     [HttpPost("/user/{userId:Guid}/category")]
-    public async Task<ActionResult<OfferEntity>> PostCategory(Guid userId, [FromBody] Category category)
+    public async Task<ActionResult<CategoryEntity>> PostCategory(Guid userId, [FromBody] Category category)
     {
         try
         {
             return Ok(await _categoryService.PostCategory(userId, category));
         }
-        catch (Exception)
+        catch (CategoryAlreadyExist ex)
         {
-            return BadRequest();
+            return BadRequest(ex.Message);
         }
     }
     
     [HttpGet("/categories")]
-    public async Task<ActionResult<OfferEntity>> GetCategories()
+    public async Task<ActionResult<CategoryEntity>> GetCategories()
     {
         try
         {

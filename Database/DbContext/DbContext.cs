@@ -3,7 +3,7 @@ using OfferService.Database.Configuration;
 using OfferService.Database.Entities;
 
 namespace OfferService.Database.DbContext;
-public class OfferDbContext : Microsoft.EntityFrameworkCore.DbContext
+public sealed class OfferDbContext : Microsoft.EntityFrameworkCore.DbContext
 {
     public OfferDbContext(DbContextOptions<OfferDbContext> options) : base(options) { }
     

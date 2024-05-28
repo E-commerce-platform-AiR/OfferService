@@ -2,11 +2,10 @@
 
 namespace OfferService.Database.Entities;
 
-public class OfferEntity
+public sealed class OfferEntity
 {
     public long Id { get; set; }
     public string Title { get; set; }
-    public int Category { get; set; }
     public string? Description { get; set; }
     public Uri? Logo;
     public double Price { get; set; }
@@ -14,6 +13,8 @@ public class OfferEntity
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? ModifiedAt { get; set; }
     public bool IsDeleted { get; set; }
+    public int CategoryId { get; set; }
+    // public CategoryEntity Category { get; set; }
 
     public OfferEntity(Offer offer)
     {
@@ -21,6 +22,7 @@ public class OfferEntity
         Description = offer.Description;
         Logo = offer.Logo;
         Price = offer.Price;
+        CategoryId = offer.Category;
     }
 
     public OfferEntity() { }

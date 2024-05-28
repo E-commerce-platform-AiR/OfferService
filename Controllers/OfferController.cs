@@ -7,7 +7,7 @@ namespace OfferService.Controllers;
 
 [ApiController]
 //[Route("offer")]
-public class OfferController : ControllerBase
+public sealed class OfferController : ControllerBase
 {
     private readonly IOfferService _offerService;
     public OfferController(IOfferService offerService)
@@ -29,7 +29,7 @@ public class OfferController : ControllerBase
     }
     
     [HttpGet("/users/{userId:guid}/offer")]
-    public async Task<ActionResult<OfferEntity>> GetUsersOffers(Guid userId)
+    public async Task<ActionResult<IEnumerable<OfferResponse>>> GetUsersOffers(Guid userId)
     {
         try
         {
@@ -41,19 +41,18 @@ public class OfferController : ControllerBase
         }
     }
     
-    [HttpGet("/offer")]
-    public async Task<ActionResult<OfferEntity>> GetOffers(Guid userId)
+    [HttpGet("/offers")]
+    public async Task<ActionResult<OfferResponse>> GetOffers()
     {
         try
         {
-            return Ok(await _offerService.GetUsersOffers(userId));
+            return Ok(await _offerService.GetOffers());
         }
         catch (Exception)
         {
             return BadRequest();
         }
     }
-    
     
     [HttpPatch("/users/{userId:guid}/offer/{offerId:long}")]
     public async Task<ActionResult<OfferEntity>> PatchOffer(Guid userId, long offerId, [FromBody] Offer offer)
@@ -67,12 +66,26 @@ public class OfferController : ControllerBase
             return BadRequest();
         }
     }
+    
     [HttpDelete("/users/{userId:guid}/offer/{offerId:long}")]
     public async Task<ActionResult<bool>> DeleteOffer(Guid userId, long offerId)
     {
         try
         {
             return Ok(await _offerService.DeleteOffer(userId, offerId));
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
+    }
+    
+    [HttpGet("/category/{categoryId}/offers")]
+    public async Task<ActionResult<OfferResponse>> GetOfferByCategory(int categoryId)
+    {
+        try
+        {
+            return Ok(await _offerService.GetOfferByCategory(categoryId));
         }
         catch (Exception)
         {

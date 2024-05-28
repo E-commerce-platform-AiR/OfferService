@@ -4,7 +4,7 @@ using OfferService.Database.Entities;
 
 namespace OfferService.Database.Configuration;
 
-public class OfferEntityConfiguration : IEntityTypeConfiguration<OfferEntity>
+public sealed class OfferEntityConfiguration : IEntityTypeConfiguration<OfferEntity>
 {
     public void Configure(EntityTypeBuilder<OfferEntity> builder)
     {
@@ -18,7 +18,7 @@ public class OfferEntityConfiguration : IEntityTypeConfiguration<OfferEntity>
             .IsRequired()
             .HasMaxLength(255);
         
-        builder.Property(x => x.Category)
+        builder.Property(x => x.CategoryId)
             .HasColumnName("category")
             .IsRequired();
         
