@@ -60,6 +60,11 @@ public sealed class OfferService : IOfferService
         return await ConvertObjects(offers);
     }
 
+    public async Task<OfferEntity> GetOffer(long offerId)
+    {
+        return await _offerRepository.GetOffer(offerId);
+    }
+
     private async Task<IEnumerable<OfferResponse>> ConvertObjects(IEnumerable<OfferEntity> offerEntities) //no ta metoda mi sie nie podoba w wolnym czasie refactor
     {
         var offerResponses = new List<OfferResponse>();

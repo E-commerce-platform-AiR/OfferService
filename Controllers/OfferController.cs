@@ -54,6 +54,19 @@ public sealed class OfferController : ControllerBase
         }
     }
     
+    [HttpGet("/offers/{offerId:long}")]
+    public async Task<ActionResult<OfferResponse>> GetOffer(long offerId)
+    {
+        try
+        {
+            return Ok(await _offerService.GetOffer(offerId));
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
+    }
+    
     [HttpPatch("/users/{userId:guid}/offer/{offerId:long}")]
     public async Task<ActionResult<OfferEntity>> PatchOffer(Guid userId, long offerId, [FromBody] Offer offer)
     {

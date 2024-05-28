@@ -36,10 +36,21 @@ public sealed class OfferRepository : IOfferRepository
     {
         return await _dbContext.Offers.Where(x => x.IsDeleted == false).ToListAsync();
     }
-
+    
     public async Task<OfferEntity> GetOffer(Guid userId, long offerId)
     {
         OfferEntity? offerEntity =  await _dbContext.Offers.Where(x => x.Id == offerId && x.CreatedBy == userId).FirstOrDefaultAsync();
+        if (offerEntity == null)
+        {
+            throw new OfferDoesNotExistException();
+        }
+        
+        return offerEntity;
+    }
+
+    public async Task<OfferEntity> GetOffer(long offerId)
+    {
+        OfferEntity? offerEntity =  await _dbContext.Offers.Where(x => x.Id == offerId).FirstOrDefaultAsync();
         if (offerEntity == null)
         {
             throw new OfferDoesNotExistException();
