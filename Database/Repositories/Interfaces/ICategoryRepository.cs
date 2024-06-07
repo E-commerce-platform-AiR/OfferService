@@ -1,4 +1,5 @@
 ﻿using OfferService.Database.Entities;
+using OfferService.Models;
 
 namespace OfferService.Database.Repositories.Interfaces;
 

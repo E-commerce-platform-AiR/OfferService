@@ -50,7 +50,7 @@ public sealed class OfferRepository : IOfferRepository
 
     public async Task<OfferEntity> GetOffer(long offerId)
     {
-        OfferEntity? offerEntity =  await _dbContext.Offers.Where(x => x.Id == offerId).FirstOrDefaultAsync();
+        OfferEntity? offerEntity =  await _dbContext.Offers.Where(x => x.Id == offerId && !x.IsDeleted).FirstOrDefaultAsync();
         if (offerEntity == null)
         {
             throw new OfferDoesNotExistException();
@@ -58,7 +58,27 @@ public sealed class OfferRepository : IOfferRepository
         
         return offerEntity;
     }
+    
+    public async Task<List<OfferResponse>> GetOffersByIds(List<long> offerIds)
+    {
+        List<OfferResponse> offerResponses = new List<OfferResponse>();
+        foreach (var offerId in offerIds)
+        {
+            var offerEntity = await _dbContext.Offers.FirstOrDefaultAsync(x => x.Id == offerId && !x.IsDeleted);
+            if (offerEntity != null)
+            {
+                CategoryEntity categoryEntity = await _categoryRepository.GetCategoryById(offerEntity.CategoryId);
+                OfferResponse offerResponse = new(offerEntity)
+                {
+                    Category = categoryEntity.Name
+                };
+                offerResponses.Add(offerResponse);
+            }
+        }
 
+        return offerResponses;
+    }
+    
     public async Task<IEnumerable<OfferResponse>> GetOfferByCategory(int categoryId)
     {
         var offers = await _dbContext.Offers.Where(x => x.CategoryId == categoryId && x.IsDeleted == false).ToListAsync();

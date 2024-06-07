@@ -11,5 +11,6 @@ public interface IOfferRepository
     Task<OfferEntity> GetOffer(long offerId);
     Task<OfferEntity> GetOffer(Guid userId, long offerId);
     Task<IEnumerable<OfferEntity>> GetUsersOffers(Guid userId);
+    Task<List<OfferResponse>> GetOffersByIds(List<long> offerIds);
     Task<IEnumerable<OfferResponse>> GetOfferByCategory(int categoryId);
 }

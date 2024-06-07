@@ -6,6 +6,7 @@ public interface IOfferService
 {
     Task<OfferEntity> PostOffer(Guid userId, Offer offer);
     Task<OfferEntity> GetOffer(long offerId);
+    Task<List<OfferResponse>> GetOffersByIds(List<long> offerIds);
     Task<IEnumerable<OfferResponse>> GetOffers();
     Task<IEnumerable<OfferResponse>> GetUsersOffers(Guid userId);
     Task<bool> DeleteOffer(Guid userId, long offerId);

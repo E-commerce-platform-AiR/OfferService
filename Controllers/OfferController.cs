@@ -16,7 +16,7 @@ public sealed class OfferController : ControllerBase
     }
     
     [HttpPost("/users/{userId:guid}/offers")]
-    public async Task<ActionResult<OfferEntity>> PostUser(Guid userId, [FromBody] Offer offer)
+    public async Task<ActionResult<OfferEntity>> PostOffer(Guid userId, [FromBody] Offer offer)
     {
         try
         {
@@ -34,6 +34,20 @@ public sealed class OfferController : ControllerBase
         try
         {
             return Ok(await _offerService.GetUsersOffers(userId));
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
+    }
+    
+    [HttpPost("/offers")]
+    public async Task<ActionResult<List<OfferResponse>>> GetOffersByIds([FromBody] List<long> offerIds)
+    {
+        try
+        {
+            var response = await _offerService.GetOffersByIds(offerIds);
+            return Ok(response);
         }
         catch (Exception)
         {
