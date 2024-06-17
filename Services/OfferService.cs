@@ -1,4 +1,6 @@
-﻿using OfferService.Database.Entities;
+﻿using OfferService.ApiReference;
+using OfferService.ApiReference.ResponseModels;
+using OfferService.Database.Entities;
 using OfferService.Database.Repositories.Interfaces;
 using OfferService.Models;
 using OfferService.Services.Interfaces;
@@ -9,11 +11,13 @@ public sealed class OfferService : IOfferService
 {
     private readonly IOfferRepository _offerRepository;
     private readonly ICategoryRepository _categoryRepository;
+    private readonly IUsersApiReference _usersApiReference;
     
-    public OfferService(IOfferRepository offerRepository, ICategoryRepository categoryRepository)
+    public OfferService(IOfferRepository offerRepository, ICategoryRepository categoryRepository, IUsersApiReference usersApiReference)
     {
         _offerRepository = offerRepository;
         _categoryRepository = categoryRepository;
+        _usersApiReference = usersApiReference;
     }
     
     public async Task<OfferEntity> PostOffer(Guid userId, Offer offer)
@@ -93,11 +97,17 @@ public sealed class OfferService : IOfferService
     
     public async Task<bool> DeleteOffer(Guid userId, long offerId)
     {
-        OfferEntity offerEntity = await _offerRepository.GetOffer(userId, offerId);
-        offerEntity.IsDeleted = true;
-        await _offerRepository.SaveAsync();
+        OfferEntity offerEntity = await _offerRepository.GetOffer(offerId);
+        var userResponse = await _usersApiReference.GetUserById(userId);
+        if (offerEntity.CreatedBy == userId || userResponse.IsAdmin)
+        {
+            offerEntity.IsDeleted = true;
+            await _offerRepository.SaveAsync();
 
-        return true;
+            return true;
+        }
+
+        return false;
     }
     public async Task<bool> DeleteOffers(Guid userId)
     {

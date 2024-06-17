@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OfferService.ApiReference;
 using OfferService.Database.DbContext;
 using OfferService.Database.Repositories;
 using OfferService.Database.Repositories.Interfaces;
 using OfferService.Services;
 using OfferService.Services.Interfaces;
+using Refit;
 
 namespace OfferService;
 
@@ -21,6 +23,23 @@ public class Startup
         ConfigureSwagger(services);
         ConfigureScopedServices(services);
         ConfigureDatabaseContext(services);
+        ConfigureApiReferences(services);
+    }
+    
+    protected virtual void ConfigureApiReferences(IServiceCollection services)
+    {
+        var apiReferencesConfiguration = _configuration.GetSection("ApiReferences");
+        AddApiReference<IUsersApiReference>(services, apiReferencesConfiguration, "Users");
+    }
+    
+    private static void AddApiReference<TApiReference>(IServiceCollection services,
+        IConfiguration apiReferencesConfiguration, string key)
+        where TApiReference : class
+    {
+        services
+            .AddRefitClient<TApiReference>()
+            .ConfigureHttpClient(client =>
+                client.BaseAddress = new Uri(apiReferencesConfiguration.GetValue<string>(key)!));
     }
     
     private static void ConfigureControllers(IServiceCollection services)
