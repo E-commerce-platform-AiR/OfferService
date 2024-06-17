@@ -46,8 +46,7 @@ public sealed class OfferController : ControllerBase
     {
         try
         {
-            var response = await _offerService.GetOffersByIds(offerIds);
-            return Ok(response);
+             return Ok(await _offerService.GetOffersByIds(offerIds));
         }
         catch (Exception)
         {
@@ -119,4 +118,18 @@ public sealed class OfferController : ControllerBase
             return BadRequest();
         }
     }
+    
+    [HttpDelete("/users/{userId:guid}")]
+    public async Task<ActionResult<bool>> DeleteUserOffers(Guid userId)
+    {
+        try
+        {
+            return Ok(await _offerService.DeleteOffers(userId));
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
+    }
+    
 }

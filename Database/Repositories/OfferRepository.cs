@@ -17,16 +17,6 @@ public sealed class OfferRepository : IOfferRepository
         _dbContext = dbContext;
         _categoryRepository = categoryRepository;
     }
-
-    public async Task SaveAsync()
-    {
-        await _dbContext.SaveChangesAsync();
-    }
-    public async Task InsertOfferAsync(OfferEntity offerEntity)
-    {
-        await _dbContext.Offers.AddAsync(offerEntity); 
-    }
-
     public async Task<IEnumerable<OfferEntity>> GetUsersOffers(Guid userId)
     {
         return await _dbContext.Offers.Where(x => x.CreatedBy == userId && x.IsDeleted == false).OrderByDescending(x => x.CreatedAt).Take(20).ToListAsync();
@@ -47,6 +37,19 @@ public sealed class OfferRepository : IOfferRepository
         
         return offerEntity;
     }
+    
+    public async Task<List<OfferEntity>> GetOffers(Guid userId)
+    {
+        var offers =  await _dbContext.Offers.Where(x => x.CreatedBy == userId).ToListAsync();
+        if (offers == null)
+        {
+            throw new UserDoesNotOwnAnyOffers();
+        }
+        
+        return offers;
+    }
+
+    
 
     public async Task<OfferEntity> GetOffer(long offerId)
     {
@@ -91,6 +94,13 @@ public sealed class OfferRepository : IOfferRepository
 
         return offerResponses;
     }
-
-
+    
+    public async Task SaveAsync()
+    {
+        await _dbContext.SaveChangesAsync();
+    }
+    public async Task InsertOfferAsync(OfferEntity offerEntity)
+    {
+        await _dbContext.Offers.AddAsync(offerEntity); 
+    }
 }

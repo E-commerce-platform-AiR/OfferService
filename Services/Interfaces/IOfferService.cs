@@ -12,4 +12,5 @@ public interface IOfferService
     Task<bool> DeleteOffer(Guid userId, long offerId);
     Task<OfferEntity> PatchOffer(Guid userId, long offerId, Offer offer);
     Task<IEnumerable<OfferResponse>> GetOfferByCategory(int categoryId);
+    Task<bool> DeleteOffers(Guid userId);
 }

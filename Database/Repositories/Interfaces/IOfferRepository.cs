@@ -8,6 +8,7 @@ public interface IOfferRepository
     Task SaveAsync();
     Task InsertOfferAsync(OfferEntity offerEntity);
     Task<IEnumerable<OfferEntity>> GetOffers();
+    Task<List<OfferEntity>> GetOffers(Guid userId);
     Task<OfferEntity> GetOffer(long offerId);
     Task<OfferEntity> GetOffer(Guid userId, long offerId);
     Task<IEnumerable<OfferEntity>> GetUsersOffers(Guid userId);

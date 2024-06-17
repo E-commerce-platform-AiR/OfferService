@@ -99,4 +99,12 @@ public sealed class OfferService : IOfferService
 
         return true;
     }
+    public async Task<bool> DeleteOffers(Guid userId)
+    {
+        var offers = await _offerRepository.GetOffers(userId);
+        offers.ForEach(offer => offer.IsDeleted = true);
+        await _offerRepository.SaveAsync();
+        return true;
+    }
+
 }
